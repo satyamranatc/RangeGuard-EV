@@ -40,25 +40,25 @@ export default function FindChargerHero({
   const topRecommendations = reachableStations.slice(0, 2);
 
   return (
-    <div className="space-y-16 py-6 sm:py-12 max-w-5xl mx-auto animate-in fade-in duration-300">
+    <div className="space-y-8 sm:space-y-16 py-2 sm:py-12 max-w-5xl mx-auto animate-in fade-in duration-300">
       {/* ── 1. CONFIDENT HERO TITLE & CONTEXT ── */}
-      <div className="text-center space-y-4 max-w-2xl mx-auto px-4">
+      <div className="text-center space-y-2.5 sm:space-y-4 max-w-2xl mx-auto px-2 sm:px-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-xs font-semibold">
           <Zap className="w-3.5 h-3.5 fill-emerald-600 text-emerald-600" />
           <span>RangeGuard-EV Intelligence</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-zinc-950 tracking-tight leading-[1.08]">
+        <h1 className="text-3xl sm:text-6xl font-extrabold text-zinc-950 tracking-tight leading-[1.08]">
           Find a charger.
         </h1>
 
-        <p className="text-base sm:text-xl text-zinc-500 font-normal leading-relaxed">
+        <p className="text-sm sm:text-xl text-zinc-500 font-normal leading-relaxed max-w-lg mx-auto">
           Enter your current battery level to immediately see charging stations you can safely reach.
         </p>
       </div>
 
       {/* ── 2. PRIMARY CHARGING INTELLIGENCE CONSOLE ── */}
-      <div className="bg-white rounded-3xl border border-zinc-200/90 shadow-sm p-6 sm:p-10 space-y-8">
+      <div className="bg-white rounded-2xl sm:rounded-3xl border border-zinc-200/90 shadow-sm p-4 sm:p-10 space-y-6 sm:space-y-8">
         {/* Core Battery & Range Interactive Slider */}
         <BatteryRangeSlider
           batteryPct={batteryPct}

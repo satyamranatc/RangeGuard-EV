@@ -40,39 +40,69 @@ export default function ExploreMap({
   onChangeSearchQuery
 }) {
   const [showFilterSheet, setShowFilterSheet] = useState(false);
-  const [showBatteryControls, setShowBatteryControls] = useState(true);
+  const [showBatteryControls, setShowBatteryControls] = useState(false); // Collapsed by default on mobile for clean map view
+  const [mobileView, setMobileView] = useState("map"); // 'map' | 'list' on phones
 
   // Available unique operators and cities
   const operators = ["All", ...new Set(allStations.map((s) => s.operator))];
   const cities = ["All", ...new Set(allStations.map((s) => s.city))];
 
   return (
-    <div className="relative w-full h-[calc(100vh-4.5rem)] min-h-[640px] flex flex-col lg:flex-row overflow-hidden rounded-3xl border border-zinc-200/80 bg-zinc-100 shadow-sm animate-in fade-in duration-300">
+    <div className="relative w-full h-[calc(100vh-8rem)] md:h-[calc(100vh-5.5rem)] min-h-[500px] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl border border-zinc-200/80 bg-zinc-100 shadow-sm animate-in fade-in duration-300">
+      {/* ── MOBILE VIEW TOGGLE (MAP VS LIST) ── */}
+      <div className="lg:hidden absolute top-3 left-1/2 -translate-x-1/2 z-[410] bg-white/95 backdrop-blur-md p-1 rounded-full border border-zinc-200 shadow-md flex items-center gap-1">
+        <button
+          onClick={() => setMobileView("map")}
+          className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+            mobileView === "map"
+              ? "bg-zinc-900 text-white shadow-xs"
+              : "text-zinc-600 hover:text-zinc-900"
+          }`}
+        >
+          Map
+        </button>
+        <button
+          onClick={() => setMobileView("list")}
+          className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+            mobileView === "list"
+              ? "bg-zinc-900 text-white shadow-xs"
+              : "text-zinc-600 hover:text-zinc-900"
+          }`}
+        >
+          Stations ({recommendedStations.length})
+        </button>
+      </div>
+
       {/* ── 1. MAIN INTERACTIVE MAP CANVAS ── */}
-      <div className="relative flex-1 w-full h-full min-h-[360px] order-2 lg:order-1">
+      <div className={`relative flex-1 w-full h-full min-h-[300px] order-1 ${mobileView === "list" ? "hidden lg:block" : "block"}`}>
         <MapView
           userLat={userLat}
           userLon={userLon}
           safeRangeKm={safeRangeKm}
           stations={allStations}
           selectedStation={selectedStation}
-          onSelectStation={(st) => onSelectStation(st)}
+          onSelectStation={(st) => {
+            onSelectStation(st);
+            if (mobileView === "map") {
+              onOpenStationDetails(st);
+            }
+          }}
           className="w-full h-full"
         />
 
         {/* Floating Top Control Bar Over Map */}
-        <div className="absolute top-4 left-4 right-4 z-[400] flex items-center justify-between pointer-events-none">
+        <div className="absolute top-14 lg:top-4 left-3 right-3 lg:left-4 lg:right-4 z-[400] flex items-center justify-between pointer-events-none">
           {/* Left: Battery & Range Live Indicator */}
           <div className="pointer-events-auto">
             <button
               onClick={() => setShowBatteryControls(!showBatteryControls)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-zinc-200/90 text-xs font-medium text-zinc-900 shadow-md hover:bg-white transition-all active:scale-95"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-zinc-200/90 text-[11px] sm:text-xs font-medium text-zinc-900 shadow-md hover:bg-white transition-all active:scale-95"
             >
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>
-                <strong>{safeRangeKm} km</strong> Safe Range ({batteryPct}%)
+                <strong>{safeRangeKm} km</strong> Safe ({batteryPct}%)
               </span>
-              <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 transition-transform ${showBatteryControls ? "rotate-180" : ""}`} />
+              <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-zinc-400 transition-transform ${showBatteryControls ? "rotate-180" : ""}`} />
             </button>
           </div>
 
@@ -181,12 +211,27 @@ export default function ExploreMap({
             </button>
           </div>
         )}
+
+        {/* Mobile Floating Bottom Station List CTA */}
+        <div className="lg:hidden absolute bottom-4 left-4 right-4 z-[400] flex justify-center pointer-events-none">
+          <button
+            onClick={() => setMobileView("list")}
+            className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-full bg-zinc-950 text-white text-xs font-semibold shadow-xl border border-white/20 active:scale-95 transition-all"
+          >
+            <Zap className="w-3.5 h-3.5 fill-emerald-400 text-emerald-400" />
+            <span>View {recommendedStations.length} Stations in Range</span>
+          </button>
+        </div>
       </div>
 
       {/* ── 2. FLOATING STATIONS CARDS PANEL ── */}
-      <div className="w-full lg:w-[420px] h-[45%] lg:h-full bg-white/95 backdrop-blur-md border-t lg:border-t-0 lg:border-l border-zinc-200/80 flex flex-col z-10 order-1 lg:order-2 shadow-lg">
+      <div
+        className={`w-full lg:w-[420px] h-full bg-white/95 backdrop-blur-md border-t lg:border-t-0 lg:border-l border-zinc-200/80 flex flex-col z-10 order-2 shadow-lg ${
+          mobileView === "map" ? "hidden lg:flex" : "flex"
+        }`}
+      >
         {/* Panel Header */}
-        <div className="p-5 border-b border-zinc-100 space-y-3">
+        <div className="p-4 sm:p-5 border-b border-zinc-100 space-y-2.5">
           <div className="flex items-baseline justify-between">
             <h2 className="text-base font-bold text-zinc-950 tracking-tight">
               Reachable Stations

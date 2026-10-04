@@ -23,6 +23,15 @@ body {
   overflow-x: hidden;
 }
 
+/* Mobile Safe Area & Touch Scrolling */
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;

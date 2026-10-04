@@ -159,8 +159,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Segmented Tab Navigation */}
-          <nav className="flex items-center gap-1 bg-[#EBEBED] p-1 rounded-2xl text-xs font-semibold border border-zinc-200/50">
+          {/* Desktop Segmented Tab Navigation */}
+          <nav className="hidden md:flex items-center gap-1 bg-[#EBEBED] p-1 rounded-2xl text-xs font-semibold border border-zinc-200/50">
             <button
               onClick={() => setActiveTab("find")}
               className={`px-3 py-1.5 rounded-xl transition-all ${
@@ -217,10 +217,10 @@ export default function App() {
             </button>
           </nav>
 
-          {/* Right Live Battery Pill */}
+          {/* Right Live Battery Pill (Visible on both Mobile & Desktop) */}
           <div
             onClick={() => setActiveTab("find")}
-            className="cursor-pointer hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E5E5EA] text-xs font-medium text-zinc-800 shadow-2xs hover:border-zinc-300 transition-colors"
+            className="cursor-pointer flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white border border-[#E5E5EA] text-xs font-medium text-zinc-800 shadow-2xs hover:border-zinc-300 transition-colors"
           >
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             <span className="font-mono font-semibold">{batteryPct}%</span>
@@ -229,8 +229,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── MAIN CONTENT CONTAINER ── */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      {/* ── MAIN CONTENT CONTAINER (Padded for mobile bottom nav) ── */}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-24 md:py-8">
         {/* VIEW 1: FIND CHARGER HERO */}
         {activeTab === "find" && (
           <FindChargerHero
@@ -324,6 +324,69 @@ export default function App() {
           onClose={() => setModalStation(null)}
         />
       )}
+
+      {/* ── MOBILE BOTTOM NAVIGATION (APPLE IOS TAB BAR STYLE) ── */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F5F5F7]/95 backdrop-blur-xl border-t border-[#E5E5EA] px-2 py-1.5 flex items-center justify-around shadow-lg">
+        <button
+          onClick={() => setActiveTab("find")}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            activeTab === "find"
+              ? "text-emerald-700 font-bold"
+              : "text-[#8E8E93] hover:text-zinc-900"
+          }`}
+        >
+          <Zap className={`w-5 h-5 ${activeTab === "find" ? "fill-emerald-600 text-emerald-600" : ""}`} />
+          <span className="text-[10px] tracking-tight">Find</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("explore")}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            activeTab === "explore"
+              ? "text-emerald-700 font-bold"
+              : "text-[#8E8E93] hover:text-zinc-900"
+          }`}
+        >
+          <Compass className={`w-5 h-5 ${activeTab === "explore" ? "text-emerald-600" : ""}`} />
+          <span className="text-[10px] tracking-tight">Explore</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("coverage")}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            activeTab === "coverage"
+              ? "text-emerald-700 font-bold"
+              : "text-[#8E8E93] hover:text-zinc-900"
+          }`}
+        >
+          <Layers className={`w-5 h-5 ${activeTab === "coverage" ? "text-emerald-600" : ""}`} />
+          <span className="text-[10px] tracking-tight">Coverage</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("insights")}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            activeTab === "insights"
+              ? "text-emerald-700 font-bold"
+              : "text-[#8E8E93] hover:text-zinc-900"
+          }`}
+        >
+          <BarChart3 className={`w-5 h-5 ${activeTab === "insights" ? "text-emerald-600" : ""}`} />
+          <span className="text-[10px] tracking-tight">Insights</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("data")}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
+            activeTab === "data"
+              ? "text-emerald-700 font-bold"
+              : "text-[#8E8E93] hover:text-zinc-900"
+          }`}
+        >
+          <BookOpen className={`w-5 h-5 ${activeTab === "data" ? "text-emerald-600" : ""}`} />
+          <span className="text-[10px] tracking-tight">Data</span>
+        </button>
+      </nav>
     </div>
   );
 }
