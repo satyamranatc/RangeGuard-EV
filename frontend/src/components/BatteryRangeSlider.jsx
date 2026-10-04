@@ -33,6 +33,21 @@ export default function BatteryRangeSlider({
     return "bg-emerald-500";
   };
 
+  // Calculate percentage fill for track gradient
+  const minVal = 2;
+  const maxVal = 100;
+  const fillPct = Math.min(100, Math.max(0, ((batteryPct - minVal) / (maxVal - minVal)) * 100));
+
+  const getTrackFillColor = () => {
+    if (batteryPct <= 15) return "#EF4444"; // Red for critical
+    if (batteryPct <= 30) return "#F59E0B"; // Amber for low
+    return "#00A86B"; // Apple Electric Emerald Green
+  };
+
+  const trackStyle = {
+    background: `linear-gradient(to right, ${getTrackFillColor()} 0%, ${getTrackFillColor()} ${fillPct}%, #E5E5EA ${fillPct}%, #E5E5EA 100%)`
+  };
+
   if (compact) {
     return (
       <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-zinc-200/90 p-4 shadow-lg space-y-3">
@@ -49,15 +64,18 @@ export default function BatteryRangeSlider({
           </div>
         </div>
 
-        <input
-          type="range"
-          min="2"
-          max="100"
-          step="1"
-          value={batteryPct}
-          onChange={(e) => onChangeBattery(Number(e.target.value))}
-          className="w-full accent-zinc-900 cursor-pointer h-2 bg-zinc-100 rounded-lg appearance-none"
-        />
+        <div className="py-1">
+          <input
+            type="range"
+            min="2"
+            max="100"
+            step="1"
+            value={batteryPct}
+            onChange={(e) => onChangeBattery(Number(e.target.value))}
+            className="apple-slider"
+            style={trackStyle}
+          />
+        </div>
 
         <div className="flex items-center justify-between text-[11px] text-zinc-500">
           <span>Safe Range: <strong className="font-mono text-zinc-900 font-semibold">{safeRangeKm} km</strong></span>
@@ -93,8 +111,8 @@ export default function BatteryRangeSlider({
         </div>
       </div>
 
-      {/* Battery Percentage Display & Visual Bar */}
-      <div className="space-y-2">
+      {/* Battery Percentage Display & Slider */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-6 h-3 rounded-sm border border-zinc-400 p-0.5 flex items-center relative">
@@ -113,16 +131,28 @@ export default function BatteryRangeSlider({
           </span>
         </div>
 
-        {/* Slider Input */}
-        <input
-          type="range"
-          min="2"
-          max="100"
-          step="1"
-          value={batteryPct}
-          onChange={(e) => onChangeBattery(Number(e.target.value))}
-          className="w-full h-3 bg-zinc-100 rounded-lg appearance-none cursor-pointer accent-zinc-950 transition-all focus:outline-none"
-        />
+        {/* Slider Input with Apple styling & dynamic track gradient */}
+        <div className="py-1">
+          <input
+            type="range"
+            min="2"
+            max="100"
+            step="1"
+            value={batteryPct}
+            onChange={(e) => onChangeBattery(Number(e.target.value))}
+            className="apple-slider"
+            style={trackStyle}
+          />
+        </div>
+
+        {/* Clean Tick Indicators */}
+        <div className="flex justify-between items-center text-[10px] text-zinc-400 font-mono px-0.5">
+          <span>2% Critical</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>100% Full</span>
+        </div>
       </div>
 
       {/* Quick Test Preset Buttons */}
