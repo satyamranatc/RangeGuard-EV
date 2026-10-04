@@ -66,7 +66,7 @@ export default function DataView({ onOpenStationDetails }) {
           </div>
 
           <p className="text-xs text-zinc-500 leading-relaxed">
-            A station is marked candidate reachable if and only if its Haversine geodesic distance $d \le R_{safe}$ AND its recorded dataset status is operational.
+            A station is marked candidate reachable if and only if its Haversine geodesic distance d &le; R_safe AND its recorded dataset status is operational.
           </p>
         </div>
 
